@@ -122,8 +122,6 @@ local function Download(Url, Path)
 		Url = "https://"..Url
 	end
 	local Body, Error = https.request(Url)
-	print(Url)
-	print(Body, Error)
 	if not Body then
 		return nil, "Error while downloading file: "..tostring(Error).."."
 	end
@@ -141,7 +139,7 @@ end
 
 local Home
 if OS == "Windows" then
-	Home = os.getenv("APPDATA")
+	Home = os.getenv("APPDATA"):gsub("\\", "/").."/"
 else
 	Home = os.getenv("HOME").."/"
 end
@@ -156,6 +154,21 @@ local function Split(String, Seperator)
 		table.insert(Table, Text)
 	end
 	return Table
+end
+
+local function Merge(T1, T2)
+	local Return = {}
+	for i,v in pairs(T1) do
+		if Return[i] == nil then
+			Return[i] = v
+		end
+	end
+	for i,v in pairs(T2) do
+		if Return[i] == nil then
+			Return[i] = v
+		end
+	end
+	return Return
 end
 
 local function Reverse(Table)
